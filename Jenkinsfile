@@ -28,7 +28,7 @@ pipeline {
           spec:
             containers:
               - name: kaniko
-                image: gcr.io/kaniko-project/executor:debug
+                image: gcr.io/kaniko-project/executor:debug-v0.16.0
                 imagePullPolicy: Always
                 command:
                 - /busybox/cat
@@ -40,7 +40,7 @@ pipeline {
                     mountPath: /secret
                   - name: aws-secret
                     mountPath: /kaniko/.aws/
-
+            serviceAccount: "build-robot"
             volumes:
               - name: docker-config
                 configMap:
@@ -67,7 +67,7 @@ pipeline {
       stage('Build in Dev') {
           steps {
             sh("helm init --upgrade")
-            sh("helm upgrade --install --namespace dev neo-app --set buildName='Build Number ${env.BUILD_NUMBER}'")
+            sh "helm upgrade --install --namespace dev neo-app neo-demo-app/ --set buildName=Build-number-${env.BUILD_NUMBER}"
           }
       }
 
