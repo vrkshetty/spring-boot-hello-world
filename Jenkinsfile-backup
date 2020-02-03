@@ -44,7 +44,7 @@ pipeline {
             volumes:
               - name: docker-config
                 configMap:
-                    name: docker-config
+                    name: credconfig
               - name: kaniko-secret
                 secret:
                   secretName: kaniko-secret
@@ -66,8 +66,8 @@ pipeline {
       }
       stage('Build in Dev') {
           steps {
-            sh("helm init --upgrade")
-            sh("helm upgrade --install --namespace dev neo-app --set buildName='Build Number ${env.BUILD_NUMBER}'")
+            sh("helm init --client-only --skip-refresh")
+            sh("helm upgrade --install --namespace dev neo-app --set buildName='Build Number ${env.BUILD_NUMBER}' neo-demo-app")
           }
       }
 
