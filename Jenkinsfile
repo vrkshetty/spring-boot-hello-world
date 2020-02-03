@@ -34,12 +34,17 @@ pipeline {
                 - /busybox/cat
                 tty: true
                 volumeMounts:
+                  - name: docker-config
+                    mountPath: /kaniko/.docker/
                   - name: kaniko-secret
                     mountPath: /secret
                   - name: aws-secret
                     mountPath: /kaniko/.aws/
 
             volumes:
+              - name: docker-config
+                configMap:
+                    name: credconfig
               - name: kaniko-secret
                 secret:
                   secretName: kaniko-secret
